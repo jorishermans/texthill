@@ -1,4 +1,4 @@
-import { IStore } from "../index.js";
+import { IStore } from "../";
 export declare class MemoryStore extends IStore {
     private _values;
     getItemSync(key: string, defaultValue?: any): any;

@@ -4,7 +4,7 @@ import { Stemmer } from './stemmer/stemmer'
 import { PorterStemmer } from './stemmer/porter_stemmer'
 import { WaveryConfiguration } from './configuration'
 import { Score } from './score'
-import { Wavery } from './wavery'
+import { BountyHunter } from './bountyhunter'
 import { IStore } from './storage/store'
 import { MemoryStore } from './storage/memory-store'
 export {
@@ -14,7 +14,7 @@ export {
     PorterStemmer,
     WaveryConfiguration,
     Score,
-    Wavery,
+    BountyHunter,
     IStore,
     MemoryStore
 } 

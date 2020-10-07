@@ -3,7 +3,7 @@ import { intersect } from "./utilities";
 
 export type IDict<T> = { [id: string] : T; }
 
-export class Wavery {
+export class BountyHunter {
   
     static LATEST_DOCID = "latest_docId";
     
@@ -20,7 +20,7 @@ export class Wavery {
                 this.s.getItem("docIds", {}),
                 this.s.getItem("index", {}),
                 this.s.getItem("tf", {}),
-                this.s.getItem(Wavery.LATEST_DOCID)])
+                this.s.getItem(BountyHunter.LATEST_DOCID)])
         const docs_map = values[0];
         const docIds_map = values[1]; 
         // reverse index
@@ -166,10 +166,10 @@ export class Wavery {
     
     _latestDocId(latestDocId: number) {
       if (latestDocId==null) {
-        this.s.setItem(Wavery.LATEST_DOCID, 1);
+        this.s.setItem(BountyHunter.LATEST_DOCID, 1);
         latestDocId = 0;
       } else {
-        this.s.setItem(Wavery.LATEST_DOCID, latestDocId + 1);
+        this.s.setItem(BountyHunter.LATEST_DOCID, latestDocId + 1);
       }
       return latestDocId;
     }

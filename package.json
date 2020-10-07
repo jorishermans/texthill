@@ -1,6 +1,6 @@
 {
-  "name": "wavery",
-  "version": "1.0.0",
+  "name": "bountyhunter",
+  "version": "0.1.0",
   "description": "",
   "main": "./lib/cjs/index.js",
   "module": "./lib/index.js",
