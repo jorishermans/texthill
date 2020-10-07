@@ -1,0 +1,24 @@
+{
+  "name": "wavery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/index.js",
+  "scripts": {
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "test": "npx jest --runInBand --detectOpenHandles --colors --verbose --reporters=default",
+    "test:ci": "npx jest --ci --runInBand --silent --colors --coverage",
+    "prepublish": "npm run tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest-junit": "^11.1.0",
+    "ts-jest": "^26.4.1",
+    "typescript": "^4.0.3"
+  },
+  "files": [
+    "lib/"
+  ]
+}
