@@ -1,4 +1,4 @@
-export class WaveryConfiguration {
+export class Configuration {
   
     constructor(public stopWords: string[] = []) {
     }

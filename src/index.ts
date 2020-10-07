@@ -2,7 +2,7 @@ import { Vector } from './vector'
 import { Normalizer } from './normalizer'
 import { Stemmer } from './stemmer/stemmer'
 import { PorterStemmer } from './stemmer/porter_stemmer'
-import { WaveryConfiguration } from './configuration'
+import { Configuration } from './configuration'
 import { Score } from './score'
 import { BountyHunter } from './bountyhunter'
 import { IStore } from './storage/store'
@@ -12,7 +12,7 @@ export {
     Normalizer,
     Stemmer,
     PorterStemmer,
-    WaveryConfiguration,
+    Configuration,
     Score,
     BountyHunter,
     IStore,

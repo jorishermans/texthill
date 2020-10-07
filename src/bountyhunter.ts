@@ -1,4 +1,4 @@
-import { Normalizer, Score, Vector, WaveryConfiguration, IStore } from ".";
+import { Normalizer, Score, Vector, Configuration, IStore } from ".";
 import { intersect } from "./utilities";
 
 export type IDict<T> = { [id: string] : T; }
@@ -7,12 +7,9 @@ export class BountyHunter {
   
     static LATEST_DOCID = "latest_docId";
     
-    configuration = new WaveryConfiguration();
-    normalizer = new Normalizer();
-    
     _N = 0; 
     
-    constructor(private s: IStore) { }
+    constructor(private s: IStore, public normalizer = new Normalizer(), public configuration = new Configuration()) { }
     
     async feedDoc(key: string, unstructuredDoc: string) {
       // lookup if doc already exist
