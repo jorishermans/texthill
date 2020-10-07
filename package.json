@@ -1,7 +1,7 @@
 {
   "name": "bountyhunter",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.1.1",
+  "description": "A full text search engine using idf tf, that you can use in the browser and on the server",
   "main": "./lib/cjs/index.js",
   "module": "./lib/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "prepublish": "npm run tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "Joris Hermans",
   "license": "ISC",
   "devDependencies": {
     "jest-junit": "^11.1.0",
