@@ -1,4 +1,4 @@
-import { Normalizer, Score, Vector, Configuration, IStore } from ".";
+import { Normalizer, Score, Vector, Configuration, Store } from ".";
 import { intersect } from "./utilities";
 
 export type IDict<T> = { [id: string] : T; }
@@ -9,7 +9,7 @@ export class BountyHunter {
     
     _N = 0; 
     
-    constructor(private s: IStore, public normalizer = new Normalizer(), public configuration = new Configuration()) { }
+    constructor(private s: Store, public normalizer = new Normalizer(), public configuration = new Configuration()) { }
     
     async feedDoc(key: string, unstructuredDoc: string) {
       // lookup if doc already exist

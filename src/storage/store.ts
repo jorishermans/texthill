@@ -1,7 +1,5 @@
-export abstract class IStore {
+export abstract class Store {
 
-    abstract getItemSync(key: string, defaultValue?: any): any;
-    
     abstract getItem(key: string, defaultValue?: any): Promise<any>;
 
     abstract setItem(key: string, data: any): Promise<void>;

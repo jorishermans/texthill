@@ -1,12 +1,12 @@
-import { IStore } from "../";
+import { Store } from "../";
 
 type IDict<T> = { [id: string] : T; }
 
-export class MemoryStore extends IStore {
+export class MemoryStore extends Store {
     
     private _values: IDict<any> = {};
 
-    getItemSync(key: string, defaultValue?: any) {
+    private getItemSync(key: string, defaultValue?: any) {
         return this._values[key] ? this._values[key] : defaultValue;
     }
     getItem(key: string, defaultValue?: any): Promise<any> {

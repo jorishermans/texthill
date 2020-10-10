@@ -5,7 +5,7 @@ import { PorterStemmer } from './stemmer/porter_stemmer'
 import { Configuration } from './configuration'
 import { Score } from './score'
 import { BountyHunter } from './bountyhunter'
-import { IStore } from './storage/store'
+import { Store } from './storage/store'
 import { MemoryStore } from './storage/memory-store'
 export {
     Vector,
@@ -15,6 +15,6 @@ export {
     Configuration,
     Score,
     BountyHunter,
-    IStore,
+    Store,
     MemoryStore
 } 
