@@ -14,10 +14,8 @@ const feed = async () => {
 
 Write your own store to store your indexes where you prefer, extend from this abstract class.
 ```typescript
-export abstract class IStore {
+export abstract class Store {
 
-    abstract getItemSync(key: string, defaultValue?: any): any;
-    
     abstract getItem(key: string, defaultValue?: any): Promise<any>;
 
     abstract setItem(key: string, data: any): Promise<void>;
@@ -27,7 +25,7 @@ export abstract class IStore {
 }
 
 /// implement your own store
-export class MyStore extends IStore {
+export class MyStore extends Store {
     ...
 }
 const bh = new BountyHunter(new MyStore());
