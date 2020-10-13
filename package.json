@@ -1,6 +1,6 @@
 {
   "name": "bountyhunter",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A full text search engine using idf tf, that you can use in the browser and on the server",
   "main": "./lib/cjs/index.js",
   "module": "./lib/index.js",
