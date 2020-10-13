@@ -12,6 +12,12 @@ const feed = async () => {
 }
 ```
 
+Or remove the document from the index. 
+```typescript
+const bh = new BountyHunter(new MemoryStore());
+bh.removeDoc("hello world").then(_ => console.log('succesfully removed'))
+```
+
 Write your own store to store your indexes where you prefer, extend from this abstract class.
 ```typescript
 export abstract class Store {

@@ -1,3 +1,6 @@
+## v0.1.4 - 13/10/2020
+* remove the document from the index
+
 ## v0.1.3 - 10/10/2020
 * adapt readme.md
 

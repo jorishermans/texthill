@@ -13,20 +13,12 @@ export class BountyHunter {
     
     async feedDoc(key: string, unstructuredDoc: string) {
       // lookup if doc already exist
-      const values = await Promise.all([this.s.getItem("docs", {}), 
+      const [docs_map, docIds_map, index, tf, latestDocId] = await Promise.all([this.s.getItem("docs", {}), 
                 this.s.getItem("docIds", {}),
                 this.s.getItem("index", {}),
                 this.s.getItem("tf", {}),
                 this.s.getItem(BountyHunter.LATEST_DOCID)])
-        const docs_map = values[0];
-        const docIds_map = values[1]; 
-        // reverse index
-        const index = values[2]; 
-        // store tf
-        const tf = values[3]; 
-        
-        const latestDocId = values[4];
-        
+  
       return await this._feedDocBy(key, unstructuredDoc, docs_map, docIds_map, index, tf, latestDocId);
     }
 
@@ -45,32 +37,8 @@ export class BountyHunter {
          docIds_map[`${docId}`] = key;
          await this.s.setItem("docIds", docIds_map);
       } else {
-         docId = docInfo;
-                  
-         // docId already exist so clear the document in the index before re-indexing the new document
-         let removals: string[] = [];
-         Object.keys(index).forEach((key) => {
-            const value = index[key];
-            if (Array.isArray(value)) {
-                const postings = value;
-                postings.splice(postings.indexOf(docId), 1);
-            }
-         });
-         removals.forEach((o) => delete index[o]);
-         removals = [];
-         Object.keys(tf).forEach((key) => {
-            const value = tf[key];
-           if (Array.isArray(value)) {
-               const mapWithDocId = value;
-                      
-               mapWithDocId.slice(mapWithDocId.indexOf(`${docId}`), 1);
-                      
-               if (mapWithDocId.length==0) {
-                   removals.push(key);
-               }
-           }
-         });
-         removals.forEach((o) => delete tf[o]);
+        docId = docInfo;
+        this.removeDocIdFromIndex(index, tf, docId);
       }
                 
       const words = unstructuredDoc.split(" ");
@@ -94,6 +62,64 @@ export class BountyHunter {
       await this.s.setItem("index", index);
                 
       return docId;
+    }
+
+    private removeDocIdFromIndex(index: IDict<Array<any>>, tf: IDict<Array<any> | string>, docId: number) {
+         // docId already exist so clear the document in the index before re-indexing the new document
+         let removals: string[] = [];
+         Object.keys(index).forEach((key) => {
+            const value = index[key];
+            if (Array.isArray(value)) {
+                const postings = value;
+                postings.splice(postings.indexOf(docId), 1);
+                if (postings.length === 0) { removals.push(key); }
+            }
+         });
+         removals.forEach((o) => delete index[o]);
+         removals = [];
+         Object.keys(tf).forEach((key) => {
+            const value = tf[key];
+           if (Array.isArray(value)) {
+               const mapWithDocId = value;
+                      
+               mapWithDocId.slice(mapWithDocId.indexOf(`${docId}`), 1);
+                      
+               if (mapWithDocId.length==0) {
+                   removals.push(key);
+               }
+           }
+         });
+         removals.forEach((o) => delete tf[o]);
+         return {index, tf};
+    }
+
+    async removeDoc(key: string) {
+      // lookup if doc already exist
+      const [docs_map, docIds_map, index, tf, latestDocId] = await Promise.all([this.s.getItem("docs", {}), 
+                this.s.getItem("docIds", {}),
+                this.s.getItem("index", {}),
+                this.s.getItem("tf", {}),
+                this.s.getItem(BountyHunter.LATEST_DOCID)])
+  
+      return await this._removeDocBy(key, docs_map, docIds_map, index, tf, latestDocId);
+    }
+
+    async _removeDocBy(key: string, docs_map: IDict<number>, 
+      docIds_map: IDict<string>, index: IDict<Array<any>>, tf: IDict<Array<any> | string>, latestDocId: number) { 
+        var docId = docs_map[key];
+
+        if (docId!=null) {
+          delete docs_map[key];
+          await this.s.setItem("docs", docs_map);
+                   
+          delete docIds_map[`${key}`];
+          
+          await this.s.setItem("docIds", docIds_map);
+          this.removeDocIdFromIndex(index, tf, docId);
+
+          await this.s.setItem("tf", tf);
+          await this.s.setItem("index", index);
+       }
     }
     
     async search(sentence: string) {
