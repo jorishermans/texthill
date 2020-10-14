@@ -1,3 +1,8 @@
+### TextHill
+## v0.1.5
+* rebrand this package to texthill
+
+### bountyhunter
 ## v0.1.4 - 13/10/2020
 * remove the document from the index
 

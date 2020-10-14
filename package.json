@@ -1,6 +1,6 @@
 {
-  "name": "bountyhunter",
-  "version": "0.1.4",
+  "name": "texthill",
+  "version": "0.1.5",
   "description": "A full text search engine using idf tf, that you can use in the browser and on the server",
   "main": "./lib/cjs/index.js",
   "module": "./lib/index.js",
@@ -13,6 +13,8 @@
   "keywords": [],
   "author": "Joris Hermans",
   "license": "ISC",
+  "homepage": "https://github.com/jorishermans/texthill",
+  "bugs": { "url" : "https://github.com/jorishermans/texthill/issues" },
   "devDependencies": {
     "jest-junit": "^11.1.0",
     "ts-jest": "^26.4.1",

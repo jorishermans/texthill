@@ -3,7 +3,7 @@ import { intersect } from "./utilities";
 
 export type IDict<T> = { [id: string] : T; }
 
-export class BountyHunter {
+export class TextHill {
   
     static LATEST_DOCID = "latest_docId";
     
@@ -17,7 +17,7 @@ export class BountyHunter {
                 this.s.getItem("docIds", {}),
                 this.s.getItem("index", {}),
                 this.s.getItem("tf", {}),
-                this.s.getItem(BountyHunter.LATEST_DOCID)])
+                this.s.getItem(TextHill.LATEST_DOCID)])
   
       return await this._feedDocBy(key, unstructuredDoc, docs_map, docIds_map, index, tf, latestDocId);
     }
@@ -99,7 +99,7 @@ export class BountyHunter {
                 this.s.getItem("docIds", {}),
                 this.s.getItem("index", {}),
                 this.s.getItem("tf", {}),
-                this.s.getItem(BountyHunter.LATEST_DOCID)])
+                this.s.getItem(TextHill.LATEST_DOCID)])
   
       return await this._removeDocBy(key, docs_map, docIds_map, index, tf, latestDocId);
     }
@@ -189,10 +189,10 @@ export class BountyHunter {
     
     _latestDocId(latestDocId: number) {
       if (latestDocId==null) {
-        this.s.setItem(BountyHunter.LATEST_DOCID, 1);
+        this.s.setItem(TextHill.LATEST_DOCID, 1);
         latestDocId = 0;
       } else {
-        this.s.setItem(BountyHunter.LATEST_DOCID, latestDocId + 1);
+        this.s.setItem(TextHill.LATEST_DOCID, latestDocId + 1);
       }
       return latestDocId;
     }
