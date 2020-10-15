@@ -1,5 +1,8 @@
 ### TextHill
-## v0.1.5
+## v0.1.6 - 15/10/2020
+* make indexing of an object possible with a tree of sub objects
+
+## v0.1.5 - 14/10/2020
 * rebrand this package to texthill
 
 ### bountyhunter
