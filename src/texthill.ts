@@ -1,4 +1,5 @@
 import { Normalizer, Score, Vector, Configuration, Store } from ".";
+import { inspectText } from "./inspect-text";
 import { intersect } from "./utilities";
 
 export type IDict<T> = { [id: string] : T; }
@@ -11,7 +12,8 @@ export class TextHill {
     
     constructor(private s: Store, public normalizer = new Normalizer(), public configuration = new Configuration()) { }
     
-    async feedDoc(key: string, unstructuredDoc: string) {
+    async feedDoc(key: string, unstructuredDoc: any) {
+      let text = inspectText(unstructuredDoc);
       // lookup if doc already exist
       const [docs_map, docIds_map, index, tf, latestDocId] = await Promise.all([this.s.getItem("docs", {}), 
                 this.s.getItem("docIds", {}),
@@ -19,7 +21,7 @@ export class TextHill {
                 this.s.getItem("tf", {}),
                 this.s.getItem(TextHill.LATEST_DOCID)])
   
-      return await this._feedDocBy(key, unstructuredDoc, docs_map, docIds_map, index, tf, latestDocId);
+      return await this._feedDocBy(key, text, docs_map, docIds_map, index, tf, latestDocId);
     }
 
     async _feedDocBy(key: string, unstructuredDoc: string, docs_map: IDict<number>, 
