@@ -12,8 +12,9 @@ export class TextHill {
     
     constructor(private s: Store, public normalizer = new Normalizer(), public configuration = new Configuration()) { }
     
-    async feedDoc(key: string, unstructuredDoc: any) {
-      let text = inspectText(unstructuredDoc);
+    async feedDoc(key: string, unstructuredDoc: any, options?: {ignoreProps: string[]}) {
+      var ignoreProps = options?.ignoreProps ?? [];
+      let text = inspectText(unstructuredDoc, ignoreProps);
       // lookup if doc already exist
       const [docs_map, docIds_map, index, tf, latestDocId] = await Promise.all([this.s.getItem("docs", {}), 
                 this.s.getItem("docIds", {}),
