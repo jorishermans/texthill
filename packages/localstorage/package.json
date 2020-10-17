@@ -1,0 +1,31 @@
+{
+  "name": "@texthill/localstorage",
+  "version": "0.2.0",
+  "description": "A store implementation to store the indexes for texthill in localstorage",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/index.js",
+  "scripts": {
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "test": "npx jest --runInBand --detectOpenHandles --colors --verbose --reporters=default",
+    "test:ci": "npx jest --ci --runInBand --silent --colors --coverage",
+    "prepublish": "npm run tsc"
+  },
+  "keywords": ["search engine", "full-text", "nlp"],
+  "author": "Joris Hermans",
+  "license": "ISC",
+  "homepage": "https://github.com/jorishermans/texthill",
+  "bugs": {
+    "url": "https://github.com/jorishermans/texthill/issues"
+  },
+  "devDependencies": {
+    "jest-junit": "^11.1.0",
+    "ts-jest": "^26.4.1",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "@texthill/core": "^0.2.0"
+  },
+  "files": [
+    "lib/"
+  ]
+}
