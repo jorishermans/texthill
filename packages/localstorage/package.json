@@ -10,7 +10,11 @@
     "test:ci": "npx jest --ci --runInBand --silent --colors --coverage",
     "prepublish": "npm run tsc"
   },
-  "keywords": ["search engine", "full-text", "nlp"],
+  "keywords": [
+    "search engine",
+    "full-text",
+    "nlp"
+  ],
   "author": "Joris Hermans",
   "license": "ISC",
   "homepage": "https://github.com/jorishermans/texthill",
