@@ -1,4 +1,8 @@
 ### TextHill
+## v0.2.0 - 17/10/2020
+* use @texthill
+* add lerna to support multiple packages
+
 ## v0.1.6 - 15/10/2020
 * make indexing of an object possible with a tree of sub objects
 
