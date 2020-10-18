@@ -1,6 +1,8 @@
 ## TextHill / Textile integration
 
-A search engine that makes the documents in textile threads db searchable.
+A search engine that makes the documents in [textile](https://textile.io) threads db searchable.
+
+Using [textile repository](https://github.com/jorishermans/textile-repository) as a helper to work with the search model. 
 
 Look at this example below to get you started.
 ```typescript
