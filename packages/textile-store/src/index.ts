@@ -1,4 +1,4 @@
-import { TextileStore } from './textile-store';
+import { TextileStore, SearchModel } from './textile-store';
 export { 
-    TextileStore 
+    TextileStore, SearchModel
 }

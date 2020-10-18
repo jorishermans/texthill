@@ -6,7 +6,9 @@ Using [textile repository](https://github.com/jorishermans/textile-repository) a
 
 Look at this example below to get you started.
 ```typescript
-const repo = new Repository<ISearch>(searchCollectionName, db, threadId);
+import { SearchModel, TextileStore } from '@texthill/textile';
+
+const repo = new Repository<SearchModel>(searchCollectionName, db, threadId);
 const th = new TextHill(new TextileStore(repo));
 const feed = async () => {
     await th.feedDoc(model._id, model);
@@ -17,7 +19,7 @@ const feed = async () => {
 
 Or remove the document from the index. 
 ```typescript
-const repo = new Repository<ISearch>(searchCollectionName, db, threadId);
+const repo = new Repository<SearchModel>(searchCollectionName, db, threadId);
 const th = new TextHill(new TextileStore(repo));
 th.removeDoc(model._id).then(_ => console.log('succesfully removed'))
 ```
