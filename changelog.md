@@ -1,4 +1,7 @@
 ### TextHill
+## v0.2.3 - 18/10/2020
+* expose SearchModel
+
 ## v0.2.2 - 18/10/2020
 * use the textile repository package
 
