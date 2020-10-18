@@ -1,7 +1,7 @@
 declare var localStorage: any;
 import { Store } from '@texthill/core';
 import { Where } from '@textile/hub';
-import { Model, Repository } from './repository';
+import { Model, Repository } from 'textile-repository';
 
 export interface ISearch extends Model {
     name: string;

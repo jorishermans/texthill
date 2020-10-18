@@ -1,4 +1,10 @@
 ### TextHill
+## v0.2.2 - 18/10/2020
+* use the textile repository package
+
+## v0.2.1 - 18/10/2020
+* integration with textile, store indexes in a decentralized database
+
 ## v0.2.0 - 17/10/2020
 * use @texthill
 * add lerna to support multiple packages

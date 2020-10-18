@@ -28,7 +28,8 @@
   },
   "dependencies": {
     "@texthill/core": "^0.2.0",
-    "@textile/hub": "^1.1.1"
+    "@textile/hub": "^1.1.1",
+    "textile-repository": "^0.1.0"
   },
   "files": [
     "lib/"
