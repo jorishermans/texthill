@@ -1,7 +1,7 @@
 {
-  "name": "@texthill/localstorage",
+  "name": "@texthill/textile",
   "version": "0.2.0",
-  "description": "A store implementation to store the indexes for texthill in localstorage",
+  "description": "A store implementation to store the indexes for texthill in Textile ThreadsDB (IPFS)",
   "main": "./lib/cjs/index.js",
   "module": "./lib/index.js",
   "scripts": {
@@ -27,7 +27,8 @@
     "typescript": "^4.0.3"
   },
   "dependencies": {
-    "@texthill/core": "^0.2.0"
+    "@texthill/core": "^0.2.0",
+    "@textile/hub": "^1.1.1"
   },
   "files": [
     "lib/"
