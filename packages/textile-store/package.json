@@ -1,6 +1,6 @@
 {
   "name": "@texthill/textile",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A store implementation to store the indexes for texthill in Textile ThreadsDB (IPFS)",
   "main": "./lib/cjs/index.js",
   "module": "./lib/index.js",
