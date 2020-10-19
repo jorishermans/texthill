@@ -1,5 +1,5 @@
 ### TextHill
-## v0.2.4 - 18/10/2020
+## v0.2.4 & v0.2.5 - 18/10/2020
 * fix a bug in localstorage package
 
 ## v0.2.3 - 18/10/2020

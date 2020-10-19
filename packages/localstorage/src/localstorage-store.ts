@@ -11,10 +11,10 @@ export class LocalStorageStore implements Store {
 
     async getItem(key: string, defaultValue?: any) {
         const data = this.browserStorage.getItem(key);
-        return data ? data : defaultValue;
+        return data && typeof data === "string" ? JSON.parse(data) : defaultValue;
     }
     async setItem(key: string, data: any) {
-        this.browserStorage.setItem(key, data);
+        this.browserStorage.setItem(key, JSON.stringify(data));
     }
     async removeItem(key: string) {
         this.browserStorage.removeItem(key);
