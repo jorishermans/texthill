@@ -3,85 +3,96 @@ import { inspectText } from "./inspect-text";
 import { intersect } from "./utilities";
 
 export type IDict<T> = { [id: string] : T; }
+export type TextHillIndex = {
+  docIds: IDict<string>;
+  docs: IDict<number>;
+  index: IDict<Array<any>>, 
+  tf: IDict<{}>, 
+  latestDocId: number
+}
+
+export interface FeedOptions {
+  ignoreProps?: string[];
+  indexName?: string;
+}
 
 export class TextHill {
   
-    static LATEST_DOCID = "latest_docId";
-    
     _N = 0; 
+
+    private _defaultIndex = {docIds: {}, docs: {}, index: {}, tf: {}, latestDocId: 0};
     
     constructor(private s: Store, public normalizer = new Normalizer(), public configuration = new Configuration()) { }
     
-    async feedDoc(key: string, unstructuredDoc: any, options?: {ignoreProps: string[]}) {
+    private saveKey(options?: Readonly<FeedOptions>) {
+      return `index${options?.indexName ?? ''}`;
+    }
+
+    async searchModel(options?: Readonly<FeedOptions>) {
+      return await this.s.getItem<TextHillIndex>(this.saveKey(options), this._defaultIndex);
+    }
+
+    async feedDoc(key: string, unstructuredDoc: any, options?: Readonly<FeedOptions>) {
       var ignoreProps = options?.ignoreProps ?? [];
       let text = inspectText(unstructuredDoc, ignoreProps);
       // lookup if doc already exist
-      const [docs_map, docIds_map, index, tf, latestDocId] = await Promise.all([this.s.getItem("docs", {}), 
-                this.s.getItem("docIds", {}),
-                this.s.getItem("index", {}),
-                this.s.getItem("tf", {}),
-                this.s.getItem(TextHill.LATEST_DOCID)])
+      const searchModel: TextHillIndex = await this.searchModel(options);
   
-      return await this._feedDocBy(key, text, docs_map, docIds_map, index, tf, latestDocId);
+      return await this._feedDocBy(key, text, searchModel, options);
     }
 
-    async _feedDocBy(key: string, unstructuredDoc: string, docs_map: IDict<number>, 
-        docIds_map: IDict<string>, index: IDict<Array<any>>, tf: IDict<Array<any> | string>, latestDocId: number) {
-      var docInfo = docs_map[key];
+    private async _feedDocBy(key: string, unstructuredDoc: string, saveable: TextHillIndex, options?: Readonly<FeedOptions>) {
+      var docInfo = saveable.docs[key];
                 
       let docId: number;
       if (docInfo==null) {
          // put docId info into persistence
-         docId = this._latestDocId(latestDocId);
-  
-         docs_map[key] = docId;
-         await this.s.setItem("docs", docs_map);
-                  
-         docIds_map[`${docId}`] = key;
-         await this.s.setItem("docIds", docIds_map);
+         saveable.latestDocId += 1;
+         docId = saveable.latestDocId;
+
+         saveable.docs[key] = docId;                  
+         saveable.docIds[`${docId}`] = key;
       } else {
         docId = docInfo;
-        this.removeDocIdFromIndex(index, tf, docId);
+        saveable = this.removeDocIdFromIndex(saveable, docId);
       }
                 
       const words = unstructuredDoc.split(" ");
       for (let word of words) {
            word = this.normalizer.normalize(word);
            if (!this.configuration.skipWord(word)) {
-               let wordSet = index[word];
+               let wordSet = saveable.index[word];
                 if (wordSet==null) {
                     wordSet = [];
                 }
                 if (wordSet.indexOf(docId) === -1) {
                     wordSet.push(docId);
-                    index[word] = wordSet;
+                    saveable.index[word] = wordSet;
                 }
 
-               tf = this._setTfInStore(tf, `${docId}`, word);
+                saveable.tf = this._setTfInStore(saveable.tf, `${docId}`, word);
            }
       }
       
-      await this.s.setItem("tf", tf);
-      await this.s.setItem("index", index);
-                
+      await this.s.setItem(this.saveKey(options), saveable);         
       return docId;
     }
 
-    private removeDocIdFromIndex(index: IDict<Array<any>>, tf: IDict<Array<any> | string>, docId: number) {
+    private removeDocIdFromIndex(saveable: TextHillIndex , docId: number) {
          // docId already exist so clear the document in the index before re-indexing the new document
          let removals: string[] = [];
-         Object.keys(index).forEach((key) => {
-            const value = index[key];
+         Object.keys(saveable.index).forEach((key) => {
+            const value = saveable.index[key];
             if (Array.isArray(value)) {
                 const postings = value;
                 postings.splice(postings.indexOf(docId), 1);
                 if (postings.length === 0) { removals.push(key); }
             }
          });
-         removals.forEach((o) => delete index[o]);
+         removals.forEach((o) => delete saveable.index[o]);
          removals = [];
-         Object.keys(tf).forEach((key) => {
-            const value = tf[key];
+         Object.keys(saveable.tf).forEach((key) => {
+            const value = saveable.tf[key];
            if (Array.isArray(value)) {
                const mapWithDocId = value;
                       
@@ -92,69 +103,57 @@ export class TextHill {
                }
            }
          });
-         removals.forEach((o) => delete tf[o]);
-         return {index, tf};
+         removals.forEach((o) => delete saveable.tf[o]);
+         return saveable;
     }
 
-    async removeDoc(key: string) {
+    async removeDoc(key: string, options?: Readonly<FeedOptions>) {
       // lookup if doc already exist
-      const [docs_map, docIds_map, index, tf, latestDocId] = await Promise.all([this.s.getItem("docs", {}), 
-                this.s.getItem("docIds", {}),
-                this.s.getItem("index", {}),
-                this.s.getItem("tf", {}),
-                this.s.getItem(TextHill.LATEST_DOCID)])
+      const indexObj: TextHillIndex = await this.searchModel(options);
   
-      return await this._removeDocBy(key, docs_map, docIds_map, index, tf, latestDocId);
+      return await this._removeDocBy(key, indexObj);
     }
 
-    async _removeDocBy(key: string, docs_map: IDict<number>, 
-      docIds_map: IDict<string>, index: IDict<Array<any>>, tf: IDict<Array<any> | string>, latestDocId: number) { 
-        var docId = docs_map[key];
+    private async _removeDocBy(key: string, saveable: TextHillIndex, options?: Readonly<FeedOptions>) { 
+        var docId = saveable.docs[key];
 
         if (docId!=null) {
-          delete docs_map[key];
-          await this.s.setItem("docs", docs_map);
-                   
-          delete docIds_map[`${key}`];
+          delete saveable.docs[key];    
+          delete saveable.docIds[`${key}`];
           
-          await this.s.setItem("docIds", docIds_map);
-          this.removeDocIdFromIndex(index, tf, docId);
+          saveable = this.removeDocIdFromIndex(saveable, docId);
 
-          await this.s.setItem("tf", tf);
-          await this.s.setItem("index", index);
+          await this.s.setItem(this.saveKey(options), saveable);
        }
     }
     
-    async search(sentence: string) {
+    async search(sentence: string, options?: Readonly<FeedOptions>) {
       let findDocs = [];
-      const index = await this.s.getItem('index');
+      const searchModel: TextHillIndex = await this.searchModel(options);
 
-      if (index!=null) {
+      if (searchModel.index!=null) {
         let docIdsRetrieval;
         for (let term of sentence.split(" ")) {
           term = this.normalizer.normalize(term);
-          if (index[term]!=null && !this.configuration.skipWord(term)) {
+          if (searchModel.index[term]!=null && !this.configuration.skipWord(term)) {
             if (docIdsRetrieval==null) {
-              docIdsRetrieval = new Set<string>(index[term]);
+              docIdsRetrieval = new Set<string>(searchModel.index[term]);
             } else {
-              docIdsRetrieval = intersect(docIdsRetrieval, new Set<string>(index[term]));
+              docIdsRetrieval = intersect(docIdsRetrieval, new Set<string>(searchModel.index[term]));
             }
           }
         }
-        
-        // calculate scores for every document
-        const docIds = await this.s.getItem('docIds');
-        const tf = await this.s.getItem('tf');
 
-        const N = Object.keys(docIds).length;
+        const N = Object.keys(searchModel.docIds).length;
         if (docIdsRetrieval!=null) {
           for (const docId of docIdsRetrieval) {
             let scorings = new Vector();
             let terms = sentence.split(" ");
             for (let term of sentence.split(" ")) {
               term = this.normalizer.normalize(term);
-              let tf_value = tf[term]!=null ? tf[term][`${docId}`] : 0;
-              const postings = new Set(index[term]);
+              const tf_term: any = searchModel.tf[term];
+              let tf_value = tf_term!=null ? tf_term[`${docId}`] : 0;
+              const postings = new Set(searchModel.index[term]);
               let df = postings!=null ? postings.size : 0;
               
               const score = (1 + Math.log(tf_value)) * Math.log(N/df);
@@ -166,7 +165,7 @@ export class TextHill {
             }
             const totalScore = scorings.avg();
             
-            findDocs.push(new Score(totalScore, docId, docIds[`${docId}`]));
+            findDocs.push(new Score(totalScore, docId, searchModel.docIds[`${docId}`]));
           }
         }
       }
@@ -176,7 +175,7 @@ export class TextHill {
     }
     
     // set a term frequency in a certain document
-    _setTfInStore(tf: any, docId: any, word: any) {
+    private _setTfInStore(tf: any, docId: any, word: any) {
       let tf_map = tf[word];
       if (tf_map==null) {
          tf_map = new Map();
@@ -188,16 +187,6 @@ export class TextHill {
       tf[word] = tf_map;
       
       return tf;
-    }
-    
-    _latestDocId(latestDocId: number) {
-      if (latestDocId==null) {
-        this.s.setItem(TextHill.LATEST_DOCID, 1);
-        latestDocId = 0;
-      } else {
-        this.s.setItem(TextHill.LATEST_DOCID, latestDocId + 1);
-      }
-      return latestDocId;
     }
     
   }
