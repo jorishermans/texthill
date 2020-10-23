@@ -20,7 +20,7 @@ export class TextHill {
   
     _N = 0; 
 
-    private _defaultIndex = {docIds: {}, docs: {}, index: {}, tf: {}, latestDocId: 0};
+    private _defaultIndex = {docIds: {}, docs: {}, index: {}, tf: {}, latestDocId: -1};
     
     constructor(private s: Store, public normalizer = new Normalizer(), public configuration = new Configuration()) { }
     
