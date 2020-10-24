@@ -1,4 +1,8 @@
 ### TextHill
+## v0.3.0 - 24/10/2020
+* optimize indexing, only write one object with the whole data structure to a store.
+* make methods private that needs to be private
+
 ## v0.2.4 & v0.2.5 - 18/10/2020
 * fix a bug in localstorage package
 

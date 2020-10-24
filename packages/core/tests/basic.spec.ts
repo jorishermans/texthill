@@ -7,6 +7,7 @@ test('perform a feed of 1 document', async () => {
     
     const indexObj = await th.searchModel();
     expect(indexObj.latestDocId).toBe(0);
+    console.log(indexObj);
 });
 
 

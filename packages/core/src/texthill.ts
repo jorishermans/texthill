@@ -7,7 +7,7 @@ export type TextHillIndex = {
   docIds: IDict<string>;
   docs: IDict<number>;
   index: IDict<Array<any>>, 
-  tf: IDict<{}>, 
+  tf: IDict<IDict<number>>, 
   latestDocId: number
 }
 
@@ -178,7 +178,7 @@ export class TextHill {
     private _setTfInStore(tf: any, docId: any, word: any) {
       let tf_map = tf[word];
       if (tf_map==null) {
-         tf_map = new Map();
+         tf_map = {};
       }
       if (tf_map[docId]==null) {
          tf_map[docId] = 0;
