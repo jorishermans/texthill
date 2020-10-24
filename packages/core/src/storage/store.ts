@@ -1,8 +1,8 @@
 export abstract class Store {
 
-    abstract getItem(key: string, defaultValue?: any): Promise<any>;
+    abstract getItem<T>(key: string, defaultValue?: T): Promise<T>;
 
-    abstract setItem(key: string, data: any): Promise<void>;
+    abstract setItem<T>(key: string, data: T): Promise<void>;
 
     abstract removeItem(key: string): Promise<void>;
 

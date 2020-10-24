@@ -1,9 +1,18 @@
 import { MemoryStore, TextHill } from '../src';
 
 // here the whole foo var is mocked deeply
-const th = new TextHill(new MemoryStore());
+test('perform a feed of 1 document', async () => {
+    const th = new TextHill(new MemoryStore());
+    await th.feedDoc("hello world", "A 'Hello world' program is a computer program that outputs 'Hello, World!' (or some variant thereof) on a display device. Because it is typically one of the simplest programs possible in most programming languages, it is by tradition often used to illustrate to beginners the most basic syntax of a programming language. It is also used to verify that a language or system is operating correctly.");
+    
+    const indexObj = await th.searchModel();
+    expect(indexObj.latestDocId).toBe(0);
+    console.log(indexObj);
+});
+
 
 test('perform a search and get a result back', async () => {
+    const th = new TextHill(new MemoryStore());
     await th.feedDoc("hello world", "A 'Hello world' program is a computer program that outputs 'Hello, World!' (or some variant thereof) on a display device. Because it is typically one of the simplest programs possible in most programming languages, it is by tradition often used to illustrate to beginners the most basic syntax of a programming language. It is also used to verify that a language or system is operating correctly.");
     await th.feedDoc("computer program", "A computer program, or just a program, is a sequence of instructions, written to perform a specified task with a computer.[1] A computer requires programs to function, typically executing the program's instructions in a central processor.[2] The program has an executable form that the computer can use directly to execute the instructions. The same program in its human-readable source code form, from which executable programs are derived (e.g., compiled), enables a programmer to study and develop its algorithms. A collection of computer programs and related data is referred to as the software.");
     await th.feedDoc("instruction set", "An instruction set, or instruction set architecture (ISA), is the part of the computer architecture related to programming, including the native data types, instructions, registers, addressing modes, memory architecture, interrupt and exception handling, and external I/O. An ISA includes a specification of the set of opcodes (machine language), and the native commands implemented by a particular processor.");  

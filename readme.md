@@ -24,4 +24,4 @@ Texthill exists out of different packages that will help you to build and work w
 
 * @texthill/core is the core of texthill, this is all the basic classes that you need to get yourself started with texthill.
 * @texthill/localstorage is the implementation of the store so that the indexes are been saved in the localstorage of the browser.
-* [TODO:] @texthill/textile is the implementation of the store on top of textile ThreadsDB, getting an index of your collections (IPFS)
+* @texthill/textile is the implementation of the store on top of textile ThreadsDB, getting an index of your collections (IPFS)
